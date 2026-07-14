@@ -1,0 +1,61 @@
+{
+  "name": "cubcore-kiosk",
+  "version": "1.0.0",
+  "description": "Cubcore Kiosk for Windows",
+  "main": "main.js",
+  "author": "Cubcore <info@flybear.com.my>",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win",
+    "release": "electron-builder --win --publish=always"
+  },
+  "dependencies": {
+    "electron-log": "^5.2.0",
+    "electron-store": "^8.2.0",
+    "electron-updater": "^6.3.9"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.cubcore.kiosk",
+    "productName": "Cubcore Kiosk",
+    "copyright": "Copyright © 2025 Cubcore",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "artifactName": "Cubcore-Kiosk-Setup.exe"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "deleteAppDataOnUninstall": false,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Cubcore Kiosk"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "FlybearPP",
+        "repo": "cubcore-kiosk-win",
+        "releaseType": "release"
+      }
+    ]
+  }
+}
