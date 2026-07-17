@@ -57,6 +57,7 @@ function createKioskWindow(slug) {
     autoHideMenuBar: true,
     title: 'Cubcore Kiosk',
     webPreferences: {
+      preload: path.join(__dirname, 'kiosk-preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
     },
@@ -142,6 +143,11 @@ ipcMain.handle('save-slug', (_, slug) => {
 });
 
 ipcMain.handle('get-version', () => app.getVersion());
+
+// Touch-only admin gesture (5 taps in the top-left corner) — see kiosk-preload.js
+ipcMain.on('admin-gesture', () => {
+  if (inKioskMode) returnToSetup();
+});
 
 ipcMain.handle('check-for-updates', async () => {
   if (!app.isPackaged) {
