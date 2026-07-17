@@ -143,10 +143,46 @@ ipcMain.handle('save-slug', (_, slug) => {
 
 ipcMain.handle('get-version', () => app.getVersion());
 
+ipcMain.handle('check-for-updates', async () => {
+  if (!app.isPackaged) {
+    sendUpdateStatus('error', { message: 'Updates only work in the installed app, not in dev mode.' });
+    return;
+  }
+  try {
+    await autoUpdater.checkForUpdates();
+  } catch (err) {
+    // Also surfaced via the 'error' event below; swallow here to avoid an unhandled rejection.
+    log.error('checkForUpdates failed:', err.message);
+  }
+});
+
 // ─── Auto-updater ─────────────────────────────────────────────────────────────
+
+function sendUpdateStatus(status, extra = {}) {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('update-status', { status, ...extra });
+  }
+}
+
+autoUpdater.on('checking-for-update', () => {
+  sendUpdateStatus('checking');
+});
+
+autoUpdater.on('update-available', (info) => {
+  sendUpdateStatus('downloading', { version: info.version });
+});
+
+autoUpdater.on('update-not-available', () => {
+  sendUpdateStatus('up-to-date');
+});
+
+autoUpdater.on('download-progress', (progress) => {
+  sendUpdateStatus('downloading', { percent: Math.round(progress.percent) });
+});
 
 autoUpdater.on('update-downloaded', (info) => {
   log.info(`Update downloaded: v${info.version} — installing in 5 seconds`);
+  sendUpdateStatus('installing', { version: info.version });
   // Give the kiosk page a moment, then silently restart and install
   setTimeout(() => {
     inKioskMode = false; // Allow the window to close
@@ -156,4 +192,5 @@ autoUpdater.on('update-downloaded', (info) => {
 
 autoUpdater.on('error', (err) => {
   log.error('Auto-updater error:', err.message);
+  sendUpdateStatus('error', { message: err.message });
 });

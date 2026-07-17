@@ -113,6 +113,32 @@
       color: #9CA3AF;
       margin-top: 24px;
     }
+
+    .update-btn {
+      width: auto;
+      background: none;
+      color: #4F46E5;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .update-btn:hover { background: #F5F5FF; }
+    .update-btn:active { background: #EEF; }
+    .update-btn:disabled { color: #A5B4FC; border-color: #E5E7EB; cursor: not-allowed; background: none; }
+
+    .update-status {
+      font-size: 12px;
+      color: #6B7280;
+      margin-top: 8px;
+      min-height: 16px;
+      text-align: center;
+    }
+
+    .update-status.error { color: #EF4444; }
   </style>
 </head>
 <body>
@@ -135,6 +161,8 @@
     <button id="launch">Launch Kiosk →</button>
 
     <p class="version" id="version"></p>
+    <button class="update-btn" id="checkUpdate">Check for Updates</button>
+    <p class="update-status" id="updateStatus"></p>
   </div>
 
   <script>
@@ -179,6 +207,49 @@
     launchBtn.addEventListener('click', launch);
     slugInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') launch();
+    });
+
+    // ── Force update ──────────────────────────────────────────────────────
+    const checkUpdateBtn = document.getElementById('checkUpdate');
+    const updateStatusEl = document.getElementById('updateStatus');
+
+    function setUpdateStatus(text, isError = false) {
+      updateStatusEl.textContent = text;
+      updateStatusEl.classList.toggle('error', isError);
+    }
+
+    window.kiosk.onUpdateStatus((data) => {
+      switch (data.status) {
+        case 'checking':
+          checkUpdateBtn.disabled = true;
+          setUpdateStatus('Checking for updates…');
+          break;
+        case 'downloading':
+          checkUpdateBtn.disabled = true;
+          setUpdateStatus(
+            data.percent != null
+              ? `Downloading update… ${data.percent}%`
+              : `Update found${data.version ? ` (v${data.version})` : ''} — downloading…`
+          );
+          break;
+        case 'up-to-date':
+          checkUpdateBtn.disabled = false;
+          setUpdateStatus('You’re on the latest version.');
+          break;
+        case 'installing':
+          setUpdateStatus(`Installing v${data.version}… restarting shortly.`);
+          break;
+        case 'error':
+          checkUpdateBtn.disabled = false;
+          setUpdateStatus(data.message || 'Update check failed.', true);
+          break;
+      }
+    });
+
+    checkUpdateBtn.addEventListener('click', () => {
+      checkUpdateBtn.disabled = true;
+      setUpdateStatus('Checking for updates…');
+      window.kiosk.checkForUpdates();
     });
   </script>
 </body>
