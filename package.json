@@ -1,6 +1,6 @@
 {
   "name": "cubcore-kiosk",
-  "version": "1.3.1",
+  "version": "2.0.0",
   "description": "Cubcore Kiosk for Windows",
   "main": "main.js",
   "author": "Cubcore <info@flybear.com.my>",
@@ -14,7 +14,8 @@
   "dependencies": {
     "electron-log": "^5.2.0",
     "electron-store": "^8.2.0",
-    "electron-updater": "^6.3.9"
+    "electron-updater": "^6.3.9",
+    "qrcode": "^1.5.4"
   },
   "devDependencies": {
     "electron": "^33.0.0",
@@ -37,7 +38,9 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "artifactName": "Cubcore-Kiosk-Setup.exe"
@@ -58,5 +61,12 @@
         "releaseType": "release"
       }
     ]
-  }
+  },
+  "files": [
+    "main.js",
+    "slip.js",
+    "preload.js",
+    "kiosk-preload.js",
+    "renderer/**/*"
+  ]
 }

@@ -1,4 +1,11 @@
-const { ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
+
+// Bridge for the kiosk web page (see dotbear-id src/app/[tenantSlug]/kiosk/page.tsx):
+// terminal identity for site tagging, and silent slip printing.
+contextBridge.exposeInMainWorld('cubcoreKiosk', {
+  getTerminal: () => ipcRenderer.invoke('kiosk:get-terminal'),
+  printSlip: (slip) => ipcRenderer.invoke('kiosk:print-slip', slip),
+});
 
 // Touch-only admin gesture: tap the hidden top-left corner 5x within 3s
 // to reach the setup/settings screen (equivalent to Ctrl+Shift+Q).

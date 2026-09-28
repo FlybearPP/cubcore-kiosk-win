@@ -10,214 +10,373 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: #F3F4F6;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       min-height: 100vh;
-      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 24px 16px;
+      overflow-y: auto;
     }
 
     .card {
       background: #FFFFFF;
       border-radius: 24px;
-      padding: 36px 32px;
+      padding: 32px;
       width: 100%;
-      max-width: 400px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      max-width: 560px;
       box-shadow: 0 4px 32px rgba(0, 0, 0, 0.08);
     }
 
+    .head { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; }
     .icon {
-      width: 64px;
-      height: 64px;
-      border-radius: 18px;
-      background: #4F46E5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 18px;
+      width: 48px; height: 48px; border-radius: 14px; background: #4F46E5;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 22px; font-weight: 800; flex-shrink: 0;
     }
+    h1 { font-size: 24px; font-weight: 800; color: #111827; }
+    .steps { font-size: 13px; font-weight: 700; color: #6366F1; letter-spacing: 0.4px; text-transform: uppercase; }
+    .subtitle { font-size: 15px; color: #6B7280; margin: 14px 0 22px; line-height: 1.5; }
 
-    .icon span {
-      color: #fff;
-      font-size: 28px;
-      font-weight: 800;
-    }
+    label { display: block; font-size: 13px; font-weight: 700; color: #374151; margin: 16px 0 6px; }
 
-    h1 {
-      font-size: 24px;
-      font-weight: 800;
-      color: #111827;
-      margin-bottom: 6px;
-    }
-
-    .subtitle {
-      font-size: 14px;
-      color: #6B7280;
-      margin-bottom: 28px;
-      text-align: center;
-      line-height: 1.5;
-    }
-
-    input {
+    input[type=text], input[type=password] {
       width: 100%;
-      border: 1.5px solid #E5E7EB;
-      border-radius: 12px;
-      padding: 14px 16px;
-      font-size: 16px;
+      border: 2px solid #E5E7EB;
+      border-radius: 14px;
+      padding: 16px 18px;
+      font-size: 20px;
       color: #111827;
       background: #F9FAFB;
       outline: none;
       transition: border-color 0.15s;
-      margin-bottom: 8px;
     }
+    input.active { border-color: #4F46E5; background: #fff; }
+    input.pin { letter-spacing: 8px; font-family: ui-monospace, Consolas, monospace; }
 
-    input:focus {
-      border-color: #4F46E5;
+    .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .choice {
+      border: 2px solid #E5E7EB; border-radius: 14px; padding: 16px; font-size: 16px; font-weight: 700;
+      color: #374151; background: #fff; text-align: left; cursor: pointer;
     }
+    .choice.selected { border-color: #4F46E5; background: #EEF2FF; color: #3730A3; }
+    .choice small { display: block; font-weight: 500; color: #6B7280; margin-top: 2px; font-size: 12px; }
 
-    input.error {
-      border-color: #EF4444;
+    select {
+      width: 100%; border: 2px solid #E5E7EB; border-radius: 14px; padding: 14px 16px;
+      font-size: 16px; background: #fff; color: #111827;
     }
+    .row { display: flex; gap: 10px; }
+    .row > * { flex: 1; }
 
-    .error-msg {
-      color: #EF4444;
-      font-size: 13px;
-      align-self: flex-start;
-      margin-bottom: 8px;
-      min-height: 18px;
+    .error-msg { color: #DC2626; font-size: 14px; min-height: 20px; margin-top: 12px; }
+    .ok-msg { color: #059669; }
+
+    button.primary, button.secondary {
+      width: 100%; border: none; border-radius: 14px; padding: 18px; font-size: 18px; font-weight: 800;
+      cursor: pointer; margin-top: 12px;
     }
+    button.primary { background: #4F46E5; color: #fff; }
+    button.primary:active { background: #3730A3; }
+    button.primary:disabled { background: #A5B4FC; cursor: not-allowed; }
+    button.secondary { background: #fff; color: #374151; border: 2px solid #E5E7EB; }
+    button.secondary:active { background: #F3F4F6; }
+    button.link { background: none; border: none; color: #6B7280; font-size: 14px; margin-top: 14px; cursor: pointer; width: 100%; }
 
-    button {
-      width: 100%;
-      background: #4F46E5;
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 15px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: background 0.15s;
-    }
+    .summary { background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 14px; padding: 16px 18px; }
+    .summary p { font-size: 15px; color: #374151; margin: 3px 0; }
+    .summary b { color: #111827; }
 
-    button:hover { background: #4338CA; }
-    button:active { background: #3730A3; }
-    button:disabled { background: #A5B4FC; cursor: not-allowed; }
-
-    .version {
-      font-size: 12px;
-      color: #9CA3AF;
-      margin-top: 24px;
-    }
-
+    .footer { text-align: center; padding: 8px 0 12px; }
+    .version { font-size: 12px; color: #9CA3AF; }
     .update-btn {
-      width: auto;
-      background: none;
-      color: #4F46E5;
-      border: 1.5px solid #E5E7EB;
-      border-radius: 10px;
-      padding: 8px 14px;
-      font-size: 13px;
-      font-weight: 600;
-      margin-top: 10px;
+      background: none; color: #4F46E5; border: 1.5px solid #E5E7EB; border-radius: 10px;
+      padding: 8px 14px; font-size: 13px; font-weight: 600; margin-top: 8px; cursor: pointer;
     }
-
-    .update-btn:hover { background: #F5F5FF; }
-    .update-btn:active { background: #EEF; }
-    .update-btn:disabled { color: #A5B4FC; border-color: #E5E7EB; cursor: not-allowed; background: none; }
-
-    .update-status {
-      font-size: 12px;
-      color: #6B7280;
-      margin-top: 8px;
-      min-height: 16px;
-      text-align: center;
-    }
-
+    .update-btn:disabled { color: #A5B4FC; cursor: not-allowed; }
+    .update-status { font-size: 12px; color: #6B7280; margin-top: 6px; min-height: 16px; }
     .update-status.error { color: #EF4444; }
+
+    /* On-screen keyboard: kiosk panels have no physical keyboard */
+    .osk {
+      background: #1F2937; padding: 12px; display: none; flex-direction: column; gap: 8px;
+      position: sticky; bottom: 0;
+    }
+    .osk.show { display: flex; }
+    .osk .r { display: flex; gap: 8px; }
+    .osk button {
+      flex: 1; height: 58px; border: none; border-radius: 10px; background: #374151; color: #F9FAFB;
+      font-size: 22px; font-weight: 700; cursor: pointer;
+    }
+    .osk button:active { background: #4B5563; }
+    .osk button.wide { flex: 2; background: #111827; font-size: 16px; }
+
+    [hidden] { display: none !important; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="icon"><span>C</span></div>
-    <h1>Cubcore Kiosk</h1>
-    <p class="subtitle">Enter your Warehouse ID to launch the kiosk in fullscreen mode.</p>
+  <main>
+    <div class="card">
+      <div class="head">
+        <div class="icon">C</div>
+        <div>
+          <h1>Cubcore Kiosk</h1>
+          <p class="steps" id="stepLabel"></p>
+        </div>
+      </div>
 
-    <input
-      type="text"
-      id="slug"
-      placeholder="e.g. flybear"
-      autocomplete="off"
-      autocorrect="off"
-      autocapitalize="none"
-      spellcheck="false"
-    />
-    <p class="error-msg" id="error"></p>
+      <!-- Step 1: Warehouse ID + PIN -->
+      <section id="step1" hidden>
+        <p class="subtitle">Enter your Warehouse ID and the kiosk setup PIN. An admin sets the PIN in Cubcore → Admin → Settings → Kiosk Terminals.</p>
+        <label for="slug">Warehouse ID</label>
+        <input type="text" id="slug" placeholder="e.g. flybear" autocomplete="off" spellcheck="false" inputmode="none" />
+        <label for="pin">Setup PIN</label>
+        <input type="password" id="pin" class="pin" placeholder="••••" autocomplete="off" inputmode="none" />
+        <p class="error-msg" id="err1"></p>
+        <button class="primary" id="continue1">Continue →</button>
+      </section>
 
-    <button id="launch">Launch Kiosk →</button>
+      <!-- Step 2: name, location, printer -->
+      <section id="step2" hidden>
+        <p class="subtitle" id="tenantLine"></p>
+        <label for="termName">Terminal name</label>
+        <input type="text" id="termName" placeholder="e.g. Front Counter 1" maxlength="60" autocomplete="off" inputmode="none" />
+        <label>Location</label>
+        <div class="choices" id="sites"></div>
+        <p class="error-msg" id="noSites" hidden>No locations yet. Add one in Admin → Settings → Kiosk Terminals, then press Back and Continue again.</p>
+        <div id="printerBlock2"></div>
+        <p class="error-msg" id="err2"></p>
+        <button class="primary" id="register">Register &amp; Launch →</button>
+        <button class="link" id="back2">← Back</button>
+      </section>
 
+      <!-- Registered: resume / printer / reset -->
+      <section id="step3" hidden>
+        <div class="summary" style="margin-top: 16px;">
+          <p>Warehouse: <b id="sumSlug"></b></p>
+          <p>Terminal: <b id="sumName"></b></p>
+          <p>Location: <b id="sumSite"></b></p>
+        </div>
+        <div id="printerBlock3"></div>
+        <p class="error-msg" id="err3"></p>
+        <button class="primary" id="resume">Back to Kiosk →</button>
+        <button class="secondary" id="reset">Set up this terminal again</button>
+      </section>
+
+      <!-- Printer settings (moved into step 2 or 3) -->
+      <div id="printerBlock">
+        <label for="printer">Slip printer</label>
+        <select id="printer"></select>
+        <label>Paper width</label>
+        <div class="row">
+          <button class="choice" data-paper="80">80 mm<small>Standard receipt roll</small></button>
+          <button class="choice" data-paper="58">58 mm<small>Narrow roll</small></button>
+        </div>
+        <button class="secondary" id="testPrint">Print test slip</button>
+        <p class="error-msg" id="printMsg"></p>
+      </div>
+    </div>
+  </main>
+
+  <div class="footer">
     <p class="version" id="version"></p>
     <button class="update-btn" id="checkUpdate">Check for Updates</button>
     <p class="update-status" id="updateStatus"></p>
   </div>
 
+  <div class="osk" id="osk"></div>
+
   <script>
-    const slugInput = document.getElementById('slug');
-    const errorEl = document.getElementById('error');
-    const launchBtn = document.getElementById('launch');
-    const versionEl = document.getElementById('version');
+    const $ = (id) => document.getElementById(id);
+    const state = { slug: '', pin: '', sites: [], siteId: null, printer: { deviceName: null, paperWidth: 80 } };
 
-    window.kiosk.getVersion().then((v) => {
-      versionEl.textContent = `v${v}`;
+    // ── On-screen keyboard ────────────────────────────────────────────────
+    const ROWS = [
+      ['1','2','3','4','5','6','7','8','9','0'],
+      ['q','w','e','r','t','y','u','i','o','p'],
+      ['a','s','d','f','g','h','j','k','l','-'],
+      ['z','x','c','v','b','n','m','⌫'],
+      ['⇧','SPACE','DONE'],
+    ];
+    let activeInput = null;
+    let shift = false;
+    const osk = $('osk');
+    function renderOsk() {
+      osk.innerHTML = '';
+      for (const row of ROWS) {
+        const r = document.createElement('div');
+        r.className = 'r';
+        for (const k of row) {
+          const b = document.createElement('button');
+          b.textContent = k === 'SPACE' ? 'space' : k.length === 1 && shift ? k.toUpperCase() : k;
+          if (k.length > 1 || k === '⌫' || k === '⇧') b.className = 'wide';
+          b.addEventListener('pointerdown', (e) => { e.preventDefault(); pressKey(k); });
+          r.appendChild(b);
+        }
+        osk.appendChild(r);
+      }
+    }
+    function pressKey(k) {
+      if (!activeInput) return;
+      if (k === 'DONE') { focusInput(null); return; }
+      if (k === '⇧') { shift = !shift; renderOsk(); return; }
+      let v = activeInput.value;
+      if (k === '⌫') v = v.slice(0, -1);
+      else if (k === 'SPACE') v += ' ';
+      else v += shift ? k.toUpperCase() : k;
+      const max = activeInput.maxLength > 0 ? activeInput.maxLength : 100;
+      activeInput.value = v.slice(0, max);
+      activeInput.dispatchEvent(new Event('input'));
+    }
+    function focusInput(input) {
+      document.querySelectorAll('input').forEach((i) => i.classList.remove('active'));
+      activeInput = input;
+      if (input) { input.classList.add('active'); input.focus(); }
+      osk.classList.toggle('show', !!input);
+    }
+    document.querySelectorAll('input').forEach((i) => {
+      i.addEventListener('pointerdown', () => focusInput(i));
+      i.addEventListener('focus', () => focusInput(i));
+    });
+    renderOsk();
+
+    // ── Steps ─────────────────────────────────────────────────────────────
+    function show(step) {
+      ['step1', 'step2', 'step3'].forEach((s) => ($(s).hidden = s !== step));
+      $('stepLabel').textContent = step === 'step1' ? 'Step 1 of 2 · Sign in' : step === 'step2' ? 'Step 2 of 2 · This terminal' : 'Terminal settings';
+      // One printer settings block, moved into whichever step is showing
+      const holder = step === 'step2' ? $('printerBlock2') : step === 'step3' ? $('printerBlock3') : null;
+      if (holder) holder.appendChild($('printerBlock'));
+      $('printerBlock').hidden = !holder;
+      focusInput(null);
+    }
+
+    // ── Printer settings ──────────────────────────────────────────────────
+    async function loadPrinters() {
+      const printers = await window.kiosk.listPrinters();
+      const sel = $('printer');
+      sel.innerHTML = '';
+      const none = new Option('Windows default printer', '');
+      sel.appendChild(none);
+      for (const p of printers) {
+        sel.appendChild(new Option(p.displayName + (p.isDefault ? ' (default)' : ''), p.name));
+      }
+      sel.value = state.printer.deviceName || '';
+      if (sel.value !== (state.printer.deviceName || '')) sel.value = '';
+      renderPaper();
+    }
+    function renderPaper() {
+      document.querySelectorAll('[data-paper]').forEach((b) =>
+        b.classList.toggle('selected', Number(b.dataset.paper) === state.printer.paperWidth));
+    }
+    $('printer').addEventListener('change', () => {
+      state.printer.deviceName = $('printer').value || null;
+      window.kiosk.savePrinter(state.printer);
+    });
+    document.querySelectorAll('[data-paper]').forEach((b) =>
+      b.addEventListener('click', () => {
+        state.printer.paperWidth = Number(b.dataset.paper);
+        renderPaper();
+        window.kiosk.savePrinter(state.printer);
+      }));
+    $('testPrint').addEventListener('click', async () => {
+      const msg = $('printMsg');
+      msg.classList.remove('ok-msg');
+      msg.textContent = 'Printing…';
+      const r = await window.kiosk.testPrint(state.printer);
+      msg.classList.toggle('ok-msg', r.ok);
+      msg.textContent = r.ok ? 'Test slip sent to the printer.' : `Print failed: ${r.error}`;
     });
 
-    slugInput.focus();
-
-    function showError(msg) {
-      errorEl.textContent = msg;
-      slugInput.classList.add('error');
+    // ── Step 1 ────────────────────────────────────────────────────────────
+    async function continue1() {
+      const slug = $('slug').value.trim().toLowerCase();
+      const pin = $('pin').value.trim();
+      $('err1').textContent = '';
+      if (!/^[a-z0-9-]+$/.test(slug)) { $('err1').textContent = 'Enter your Warehouse ID (letters, numbers and hyphens).'; return; }
+      if (!pin) { $('err1').textContent = 'Enter the setup PIN.'; return; }
+      const btn = $('continue1');
+      btn.disabled = true; btn.textContent = 'Checking…';
+      const r = await window.kiosk.verifyPin(slug, pin);
+      btn.disabled = false; btn.textContent = 'Continue →';
+      if (!r.ok) { $('err1').textContent = r.error; return; }
+      Object.assign(state, { slug: r.tenant.slug, pin, sites: r.sites, siteId: r.sites.length === 1 ? r.sites[0].id : null });
+      $('tenantLine').textContent = `Setting up a terminal for ${r.tenant.name}. Name it and choose where it is.`;
+      renderSites();
+      show('step2');
+      loadPrinters();
     }
+    $('continue1').addEventListener('click', continue1);
+    $('pin').addEventListener('keydown', (e) => { if (e.key === 'Enter') continue1(); });
 
-    function clearError() {
-      errorEl.textContent = '';
-      slugInput.classList.remove('error');
+    // ── Step 2 ────────────────────────────────────────────────────────────
+    function renderSites() {
+      const box = $('sites');
+      box.innerHTML = '';
+      $('noSites').hidden = state.sites.length > 0;
+      for (const s of state.sites) {
+        const b = document.createElement('button');
+        b.className = 'choice' + (s.id === state.siteId ? ' selected' : '');
+        b.textContent = s.name;
+        b.addEventListener('click', () => { state.siteId = s.id; renderSites(); });
+        box.appendChild(b);
+      }
     }
-
-    slugInput.addEventListener('input', clearError);
-
-    async function launch() {
-      const slug = slugInput.value.trim().toLowerCase();
-      if (!slug) {
-        showError('Please enter your Warehouse ID.');
+    $('back2').addEventListener('click', () => show('step1'));
+    $('register').addEventListener('click', async () => {
+      const name = $('termName').value.trim();
+      $('err2').textContent = '';
+      if (!name) { $('err2').textContent = 'Name this terminal.'; return; }
+      if (!state.siteId) { $('err2').textContent = 'Choose a location.'; return; }
+      const btn = $('register');
+      btn.disabled = true; btn.textContent = 'Registering…';
+      const r = await window.kiosk.register({ slug: state.slug, pin: state.pin, name, siteId: state.siteId, printer: state.printer });
+      if (!r.ok) {
+        btn.disabled = false; btn.textContent = 'Register & Launch →';
+        $('err2').textContent = r.error;
         return;
       }
-      if (!/^[a-z0-9-]+$/.test(slug)) {
-        showError('Warehouse ID can only contain letters, numbers, and hyphens.');
-        return;
-      }
-      launchBtn.disabled = true;
-      launchBtn.textContent = 'Launching…';
-      await window.kiosk.saveSlug(slug);
-    }
-
-    launchBtn.addEventListener('click', launch);
-    slugInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') launch();
+      await window.kiosk.launch();
     });
 
-    // ── Force update ──────────────────────────────────────────────────────
-    const checkUpdateBtn = document.getElementById('checkUpdate');
-    const updateStatusEl = document.getElementById('updateStatus');
+    // ── Registered terminal ───────────────────────────────────────────────
+    $('resume').addEventListener('click', () => window.kiosk.launch());
+    $('reset').addEventListener('click', async () => {
+      await window.kiosk.resetTerminal();
+      $('pin').value = '';
+      show('step1');
+    });
 
+    // ── Boot ──────────────────────────────────────────────────────────────
+    window.kiosk.getVersion().then((v) => { $('version').textContent = `v${v}`; });
+    window.kiosk.getState().then((s) => {
+      state.printer = s.printer;
+      $('slug').value = s.slug;
+      if (s.registered && s.terminal) {
+        $('sumSlug').textContent = s.slug;
+        $('sumName').textContent = s.terminal.name;
+        $('sumSite').textContent = s.terminal.siteName || '—';
+        show('step3');
+        loadPrinters();
+      } else {
+        show('step1');
+        focusInput(s.slug ? $('pin') : $('slug'));
+      }
+    });
+
+    // ── Updates ───────────────────────────────────────────────────────────
+    const checkUpdateBtn = $('checkUpdate');
+    const updateStatusEl = $('updateStatus');
     function setUpdateStatus(text, isError = false) {
       updateStatusEl.textContent = text;
       updateStatusEl.classList.toggle('error', isError);
     }
-
     window.kiosk.onUpdateStatus((data) => {
       switch (data.status) {
         case 'checking':
@@ -245,7 +404,6 @@
           break;
       }
     });
-
     checkUpdateBtn.addEventListener('click', () => {
       checkUpdateBtn.disabled = true;
       setUpdateStatus('Checking for updates…');
