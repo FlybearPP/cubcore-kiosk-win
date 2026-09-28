@@ -13,12 +13,22 @@ function formatTime(iso) {
   });
 }
 
+// Roll width → the page width the printer driver prints on (80 mm roll = the
+// driver's 72 × 297 mm page; 58 mm roll = 48 mm). Content keeps a 2 mm margin
+// each side so nothing is clipped at the edge of the print head.
+const PAGE_WIDTH_MM = { 80: 72, 58: 48 };
+
+function pageWidthMm(paperWidth) {
+  return PAGE_WIDTH_MM[paperWidth] || PAGE_WIDTH_MM[80];
+}
+
 /**
  * @param {object} slip        payload from the kiosk page (see SlipData in kiosk/page.tsx)
  * @param {58|80} paperWidth   roll width in mm
  */
 async function buildSlipHtml(slip, paperWidth = 80) {
-  const printable = paperWidth === 58 ? 48 : 72; // printable width in mm
+  const page = pageWidthMm(paperWidth);
+  const printable = page - 4;
   const qr = slip.qrPayload
     ? await QRCode.toDataURL(slip.qrPayload, { errorCorrectionLevel: 'M', margin: 0, width: 360 })
     : null;
@@ -29,7 +39,7 @@ async function buildSlipHtml(slip, paperWidth = 80) {
   const title = slip.kind === 'pre_arrival' ? 'NOMBOR PRA-KETIBAAN<br>PRE-ARRIVAL NO.' : 'NOMBOR GILIRAN<br>QUEUE NO.';
 
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
-    @page { margin: 0; size: ${paperWidth}mm auto; }
+    @page { margin: 0; size: ${page}mm auto; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { width: ${printable}mm; margin: 0 auto; padding: 3mm 0 6mm; font-family: Arial, Helvetica, sans-serif; color: #000; }
     .c { text-align: center; }
@@ -79,4 +89,4 @@ async function buildSlipHtml(slip, paperWidth = 80) {
   </body></html>`;
 }
 
-module.exports = { buildSlipHtml };
+module.exports = { buildSlipHtml, pageWidthMm };

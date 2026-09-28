@@ -3,7 +3,7 @@ const { autoUpdater } = require('electron-updater');
 const Store = require('electron-store');
 const log = require('electron-log');
 const path = require('path');
-const { buildSlipHtml } = require('./slip');
+const { buildSlipHtml, pageWidthMm } = require('./slip');
 
 const ROOT_DOMAIN = 'cubcore.com';
 // Dev only: point at a local server, e.g. CUBCORE_DEV_URL=http://localhost:3000
@@ -105,6 +105,8 @@ function createKioskWindow(slug) {
     title: 'Cubcore Kiosk',
     webPreferences: {
       preload: path.join(__dirname, 'kiosk-preload.js'),
+      // Order alerts and courier bells must play even before anyone touches the screen
+      autoplayPolicy: 'no-user-gesture-required',
       contextIsolation: true,
       nodeIntegration: false,
     },
@@ -186,15 +188,24 @@ async function printSlip(slip) {
   const printer = store.get('printer') || { deviceName: null, paperWidth: 80 };
   const html = await buildSlipHtml(slip, printer.paperWidth || 80);
 
-  const win = new BrowserWindow({ show: false, webPreferences: { javascript: false } });
+  const win = new BrowserWindow({ show: false });
   try {
     await win.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`);
+
+    // Page = paper width × the slip's own length, so the printer cuts right
+    // after the slip instead of feeding a full 297 mm page. Sizes in microns.
+    // Measure the slip itself: the document stretches to the (hidden) window height
+    const heightPx = await win.webContents.executeJavaScript('document.body.offsetHeight');
+    const heightMicrons = Math.max(Math.ceil((heightPx * 25.4) / 96 * 1000) + 5000, 60000);
+    const pageSize = { width: pageWidthMm(printer.paperWidth || 80) * 1000, height: heightMicrons };
+
     return await new Promise((resolve) => {
       win.webContents.print(
         {
           silent: true,
           printBackground: true,
           margins: { marginType: 'none' },
+          pageSize,
           ...(printer.deviceName ? { deviceName: printer.deviceName } : {}),
         },
         (success, failureReason) => {
