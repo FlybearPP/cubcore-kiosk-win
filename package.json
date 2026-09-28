@@ -1,6 +1,6 @@
 {
   "name": "cubcore-kiosk",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Cubcore Kiosk for Windows",
   "main": "main.js",
   "author": "Cubcore <info@flybear.com.my>",
@@ -30,6 +30,7 @@
     },
     "files": [
       "main.js",
+      "slip.js",
       "preload.js",
       "kiosk-preload.js",
       "renderer/**/*"
@@ -61,12 +62,5 @@
         "releaseType": "release"
       }
     ]
-  },
-  "files": [
-    "main.js",
-    "slip.js",
-    "preload.js",
-    "kiosk-preload.js",
-    "renderer/**/*"
-  ]
+  }
 }
