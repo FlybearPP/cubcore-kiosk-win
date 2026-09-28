@@ -91,7 +91,8 @@ function createSetupWindow() {
   });
 
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'setup.html'));
-  mainWindow.on('closed', () => { mainWindow = null; });
+  const win = mainWindow;
+  win.on('closed', () => { if (mainWindow === win) mainWindow = null; });
 }
 
 // ─── Kiosk window ────────────────────────────────────────────────────────────
@@ -145,7 +146,8 @@ function createKioskWindow(slug) {
     if (inKioskMode) event.preventDefault();
   });
 
-  mainWindow.on('closed', () => { mainWindow = null; });
+  const win = mainWindow;
+  win.on('closed', () => { if (mainWindow === win) mainWindow = null; });
 
   // Check in periodically; if an admin removed this terminal, fall back to setup
   heartbeatTimer = setInterval(async () => {
@@ -170,16 +172,21 @@ function stopKioskTimers() {
 
 // Back to the setup screen. The registration is kept: setup offers
 // "Back to kiosk", printer settings, or "Set up again".
+// Open the next window BEFORE destroying the current one: with no window
+// open for a moment, 'window-all-closed' fires and the app quits.
+function swapWindow(open) {
+  const previous = mainWindow;
+  open();
+  if (previous && !previous.isDestroyed()) previous.destroy();
+}
+
 function returnToSetup() {
   inKioskMode = false;
-  if (mainWindow) mainWindow.destroy();
-  createSetupWindow();
+  swapWindow(createSetupWindow);
 }
 
 function launchKiosk() {
-  const slug = store.get('warehouseSlug');
-  if (mainWindow) mainWindow.destroy();
-  createKioskWindow(slug);
+  swapWindow(() => createKioskWindow(store.get('warehouseSlug')));
 }
 
 // ─── Printing ────────────────────────────────────────────────────────────────

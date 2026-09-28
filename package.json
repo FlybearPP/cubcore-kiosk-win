@@ -1,6 +1,6 @@
 {
   "name": "cubcore-kiosk",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Cubcore Kiosk for Windows",
   "main": "main.js",
   "author": "Cubcore <info@flybear.com.my>",
